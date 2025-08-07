@@ -1,0 +1,11 @@
+-- Drill-up: Total pengunjung per tahun
+SELECT tahun, SUM(total_pengunjung) 
+FROM mv_pengunjung_bulanan
+GROUP BY tahun;
+
+-- Drill-down: Detail pengunjung per hari di bulan tertentu
+SELECT dw.tanggal, dp.nama_promosi, fkt.jumlah_pengunjung
+FROM fact_kunjungan_telaga fkt
+JOIN dim_waktu dw ON fkt.id_dim_waktu = dw.id_waktu
+JOIN dim_promosi dp ON fkt.id_dim_promosi = dp.id_promosi
+WHERE dw.tahun = 2025 AND dw.bulan = 8;

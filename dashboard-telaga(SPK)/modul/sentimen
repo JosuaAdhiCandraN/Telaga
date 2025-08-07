@@ -1,0 +1,24 @@
+from transformers import pipeline
+
+# === FITUR 3: Analisis Sentimen ===
+def analisis_sentimen():
+    # Model IndoBERT dari HuggingFace
+    sentiment_pipeline = pipeline(
+        "sentiment-analysis",
+        model="w11wo/indonesian-roberta-base-sentiment-classifier"
+    )
+
+    ulasan = [
+        "Tempatnya sangat bersih dan nyaman.",
+        "Parkiran sempit dan ramai.",
+        "Antrian panjang sekali.",
+        "Kolamnya bersih dan anak senang."
+    ]
+
+    print("\n📊 Hasil Analisis Sentimen:")
+    for i, teks in enumerate(ulasan):
+        hasil = sentiment_pipeline(teks)[0]
+        print(f"{i+1}. \"{teks}\" → Label: {hasil['label']}, Skor: {hasil['score']:.2f}")
+
+if __name__ == "__main__":
+    analisis_sentimen()

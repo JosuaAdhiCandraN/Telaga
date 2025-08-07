@@ -1,0 +1,25 @@
+-- Hybrid OLAP query: coba dari summary, lalu detail jika perlu
+SELECT * FROM (
+    SELECT
+        tahun,
+        bulan,
+        nama_promosi,
+        total_pengunjung,
+        'summary' AS sumber
+    FROM mv_pengunjung_bulanan
+    WHERE tahun = 2025 AND bulan = 8
+
+    UNION ALL
+
+    SELECT
+        dw.tahun,
+        dw.bulan,
+        dp.nama_promosi,
+        SUM(fkt.jumlah_pengunjung) AS total_pengunjung,
+        'detail' AS sumber
+    FROM fact_kunjungan_telaga fkt
+    JOIN dim_waktu dw ON fkt.id_dim_waktu = dw.id_waktu
+    JOIN dim_promosi dp ON fkt.id_dim_promosi = dp.id_promosi
+    WHERE dw.tahun = 2025 AND dw.bulan = 8
+    GROUP BY dw.tahun, dw.bulan, dp.nama_promosi
+) AS holap_result;

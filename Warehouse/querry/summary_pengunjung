@@ -1,0 +1,12 @@
+-- Summary pengunjung per bulan per promosi
+CREATE MATERIALIZED VIEW mv_pengunjung_bulanan AS
+SELECT
+    dw.tahun,
+    dw.bulan,
+    dp.id_promosi,
+    dp.nama_promosi,
+    SUM(fkt.jumlah_pengunjung) AS total_pengunjung
+FROM fact_kunjungan_telaga fkt
+JOIN dim_waktu dw ON fkt.id_dim_waktu = dw.id_waktu
+JOIN dim_promosi dp ON fkt.id_dim_promosi = dp.id_promosi
+GROUP BY dw.tahun, dw.bulan, dp.id_promosi, dp.nama_promosi;
